@@ -58,6 +58,9 @@ class Profile extends React.Component {
       <View style={styles.container}>
         <Text style={styles.headingStyle}>Choose from the following or customize a message</Text>
         <MapView style={{ flex: 1 }} region={{ latitude: 42.882004, longitude: 74.582748, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }} showsUserLocation={true} />
+        <TextInput style={styles.textInput}
+            placeholder="Enter Your Text Message Here"
+            onChangeText={this.handleMessage} />
         <FlatList
           data={this.state.data}
           keyExtractor={(item) => item.key}
@@ -68,9 +71,6 @@ class Profile extends React.Component {
             </TouchableOpacity>}
         />
         <View>
-          <TextInput style={styles.textInput}
-            placeholder="Enter Your Text Message Here"
-            onChangeText={this.handleMessage} />
           <Button style={styles.button} title="Confirm Message Choice" onPress={this.saveChosenMessage} />
           <Text styles={styles.botton}>*Tip: you can use a codeword previously shared with loved ones to subtly identify a mental health crisis (texting them the term 'grapefruit', for instance, could trigger recognization in critical times.</Text>
         </View>

@@ -2,6 +2,7 @@ import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage'
 import { StyleSheet, View, Text, FlatList, TextInput, Button, ScrollView } from 'react-native';
 import MapView from 'react-native-maps'
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -9,6 +10,13 @@ class Profile extends React.Component {
 
     this.state = {
       message: '',
+      data: [
+        { key: '1', val: 'Hi! I am struggling right now, and it has been hard for me to reach out. I care about you and need your support at this time! Please call me!' },
+        { key: '2', val: 'Hi! I need your support right now. Please contact me as soon as possible!' },
+        { key: '3', val: 'I am in crisis. Contact me immediately!' },
+        { key: '4', val: 'I am having really difficult thoughts and should not be alone right now. Call me ASAP!' },
+        { key: '5', val: 'I am having suicidal thoughts, and I am afraid I will hurt myself. Contact me ASAP!' },
+      ]
     };
   }
 
@@ -33,8 +41,8 @@ class Profile extends React.Component {
   };
 
   handlePrewrittenMessage = (item) => {
-    console.log('kfjdkslajflsajf', item.key);
-    this.setState({ message: item.key })
+    console.log('kfjdkslajflsajf', item.val);
+    this.setState({ message: item.val })
   }
 
   saveChosenMessage = async () => {
@@ -45,39 +53,30 @@ class Profile extends React.Component {
       })
   }
 
-//handling onPress action  
-// getListViewItem = (item) => {
-//   Communications.text(this.props.navigation.state.params.chosenNumber, item.key || this.state.message)
-// };
-
-render() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.headingStyle}>Choose from the following or customize a message</Text>
-      <MapView style={{ flex: 1 }} region={{ latitude: 42.882004, longitude: 74.582748, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }} showsUserLocation={true} />
-      <FlatList
-        data={[
-          { key: 'Hi! I am struggling right now, and it has been hard for me to reach out. I care about you and need your support at this time! Please call me!' },
-          { key: 'Hi! I need your support right now. Please contact me as soon as possible!' },
-          { key: 'I am in crisis. Contact me immediately!' },
-          { key: 'I am having really difficult thoughts and should not be alone right now. Call me ASAP!' },
-          { key: 'I am having suicidal thoughts, and I am afraid I will hurt myself. Contact me ASAP!' },
-        ]}
-        renderItem={({ item }) =>
-          <Text style={styles.item}
-            onPress={this.handlePrewrittenMessage}>{item.key}</Text>}
-        ItemSeparatorComponent={this.renderSeparator}
-      />
-      <View>
-        <TextInput style={styles.textInput}
-          placeholder="Enter Your Text Message Here"
-          onChangeText={this.handleMessage} />
-        <Button style={styles.button} title="Confirm Message Choice" onPress={this.saveChosenMessage} />
-        <Text styles={styles.botton}>*Tip: you can use a codeword previously shared with loved ones to subtly identify a mental health crisis (texting them the term 'grapefruit', for instance, could trigger recognization in critical times.</Text>
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.headingStyle}>Choose from the following or customize a message</Text>
+        <MapView style={{ flex: 1 }} region={{ latitude: 42.882004, longitude: 74.582748, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }} showsUserLocation={true} />
+        <FlatList
+          data={this.state.data}
+          keyExtractor={(item) => item.key}
+          ItemSeparatorComponent={this.renderSeparator}
+          renderItem={({ item }) =>
+            <TouchableOpacity onPress={() => this.setState({ message: item.val })}>
+              <Text style={styles.item}>{item.val}</Text>
+            </TouchableOpacity>}
+        />
+        <View>
+          <TextInput style={styles.textInput}
+            placeholder="Enter Your Text Message Here"
+            onChangeText={this.handleMessage} />
+          <Button style={styles.button} title="Confirm Message Choice" onPress={this.saveChosenMessage} />
+          <Text styles={styles.botton}>*Tip: you can use a codeword previously shared with loved ones to subtly identify a mental health crisis (texting them the term 'grapefruit', for instance, could trigger recognization in critical times.</Text>
+        </View>
       </View>
-    </View>
-  );
-}
+    );
+  }
 }
 export default Profile;
 

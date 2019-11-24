@@ -26,11 +26,14 @@ export default class Home extends Component {
         title: 'Home'
     };
 
-
     async componentDidMount() {
         const value = await AsyncStorage.getItem('chosenNumber');
         this.setState({ number: value });
-        console.log(this.state.number);
+        console.log('number: ', this.state.number);
+
+        const otherValue = await AsyncStorage.getItem('chosenMessage');
+        this.setState({ message: otherValue });
+        console.log('message: ', this.state.message);
     }
 
     render() {
@@ -41,7 +44,7 @@ export default class Home extends Component {
                 {/*To send the text message function(phoneNumber = null, body = null)*/}
                 <TouchableOpacity
                     style={styles.button, styles.first}
-                    onPress={() => Communications.text(this.state.number, 'message')
+                    onPress={() => Communications.text(this.state.number, this.state.message)
                     }>
                     <Text style={styles.text}>
                         Send Emergency Contacts Alert Message with Location

@@ -1,16 +1,10 @@
-/*This is an example to Make Phone Call, Send SMS or Email Using React Native Communication*/
 import React, { Component } from 'react';
-//import React
 import AsyncStorage from '@react-native-community/async-storage'
-
-import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
-//import Basic React Components
-
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Communications from 'react-native-communications';
-// either import the whole module and call as Communications.phonecall('0123456789', true)
-// or can import single methods and call straight via the method name
-// import { web, phonecall } from 'react-native-communications';
-// e.g. onPress={() => { phonecall('0123456789', true) }}
+import Geolocation from '@react-native-community/geolocation';
+
+navigator.geolocation = require('@react-native-community/geolocation');
 
 export default class Home extends Component {
     constructor(props) {
@@ -18,7 +12,10 @@ export default class Home extends Component {
 
         this.state = {
             message: '',
-            number: ''
+            number: '',
+            latitude: null,
+            longitude: null,
+            error: null
         };
     }
 
@@ -27,6 +24,19 @@ export default class Home extends Component {
     };
 
     async componentDidMount() {
+        // get current location using geolocation
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+              console.log(position);
+              this.setState({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                error: null,
+              });
+            },
+            (error) => this.setState({ error: error.message }),
+            { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+          );
         const value = await AsyncStorage.getItem('chosenNumber');
         this.setState({ number: value });
         console.log('number: ', this.state.number);

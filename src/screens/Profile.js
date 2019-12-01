@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage'
-import { StyleSheet, View, Text, FlatList, TextInput, Button, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TextInput, Button } from 'react-native';
 import MapView from 'react-native-maps'
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 

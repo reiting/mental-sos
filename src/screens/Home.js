@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-community/async-storage'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Linking } from 'react-native';
 import Communications from 'react-native-communications';
 import Geolocation from '@react-native-community/geolocation';
+import Hyperlink from 'react-native-hyperlink'
 
 navigator.geolocation = require('@react-native-community/geolocation');
 
@@ -15,7 +16,8 @@ export default class Home extends Component {
             number: '',
             latitude: null,
             longitude: null,
-            error: null
+            error: null,
+            url: ''
         };
     }
 
@@ -25,36 +27,47 @@ export default class Home extends Component {
 
     async componentDidMount() {
         // get current location using geolocation
-        navigator.geolocation.getCurrentPosition(
+        Geolocation.getCurrentPosition(
             (position) => {
-              console.log(position);
-              this.setState({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                error: null,
-              });
+                this.setState({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    error: null,
+                });
             },
             (error) => this.setState({ error: error.message }),
             { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
-          );
-        const value = await AsyncStorage.getItem('chosenNumber');
-        this.setState({ number: value });
-        console.log('number: ', this.state.number);
+        );
+        //setting the phone number to state so I can use it in my text
+        const numberValue = await AsyncStorage.getItem('chosenNumber');
+        this.setState({ number: numberValue });
 
-        const otherValue = await AsyncStorage.getItem('chosenMessage');
-        this.setState({ message: otherValue });
-        console.log('message: ', this.state.message);
+        //setting the message to state so I can use it in my text
+        const messagValue = await AsyncStorage.getItem('chosenMessage');
+        this.setState({ message: messagValue });
+    }
+
+    mapUrl = () => {
+        // const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+        const scheme = 'http://maps.google.com/maps?q='
+        const latLng = `${this.state.latitude},${this.state.longitude}`;
+        // const label = 'Custom Label';
+        const url = Platform.select({
+            ios: `${scheme}${latLng}`,
+            android: `${scheme}${latLng}`
+        });
+        this.setState({ url: url })
     }
 
     render() {
+        console.log(this.state.url)
         return (
             <View style={styles.container}>
                 <Text style={styles.headingStyle}>Mental Health SOS</Text>
-
                 {/*To send the text message function(phoneNumber = null, body = null)*/}
                 <TouchableOpacity
                     style={styles.button, styles.first}
-                    onPress={() => Communications.text(this.state.number, this.state.message)
+                    onPress={() => Communications.text(this.state.number, this.state.message + ' My location is ' + this.state.url)
                     }>
                     <Text style={styles.text}>
                         Send Emergency Contacts Alert Message with Location

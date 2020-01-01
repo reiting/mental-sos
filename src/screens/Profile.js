@@ -1,8 +1,9 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage'
-import { StyleSheet, View, Text, FlatList, TextInput, Button } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TextInput, Button, Linking } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import MapView from 'react-native-maps'
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import Geolocation from '@react-native-community/geolocation';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -41,7 +42,6 @@ class Profile extends React.Component {
   };
 
   handlePrewrittenMessage = (item) => {
-    console.log('kfjdkslajflsajf', item.val);
     this.setState({ message: item.val })
   }
 
@@ -57,10 +57,10 @@ class Profile extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.headingStyle}>Choose from the following or customize a message</Text>
-        <MapView style={{ flex: 1 }} region={{ latitude: 42.882004, longitude: 74.582748, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }} showsUserLocation={true} />
+        {/* <MapView style={{ flex: 1 }} region={{ latitude: 42.882004, longitude: 74.582748, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }} showsUserLocation={true} /> */}
         <TextInput style={styles.textInput}
-            placeholder="Enter Your Text Message Here"
-            onChangeText={this.handleMessage} />
+          placeholder="Enter Your Text Message Here"
+          onChangeText={this.handleMessage} />
         <FlatList
           data={this.state.data}
           keyExtractor={(item) => item.key}
